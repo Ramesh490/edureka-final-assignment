@@ -1,0 +1,18 @@
+# Maven
+target/
+*.log
+*.class
+
+# Eclipse
+.project
+.settings/
+.classpath
+
+# IntelliJ
+.idea/
+
+# OS
+.DS_Store
+
+# Docker
+*.env
