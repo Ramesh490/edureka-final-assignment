@@ -1,0 +1,103 @@
+services:
+
+  mysql:
+    image: mysql:8
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: 1234567
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      - microservices-network
+
+  eureka-registry:
+    build: ./eureka-registry
+    container_name: eureka-registry
+    ports:
+      - "8761:8761"
+    networks:
+      - microservices-network
+
+  config-server:
+    build: ./config-server
+    container_name: config-server
+    ports:
+      - "8888:8888"
+    depends_on:
+      - eureka-registry
+    environment:
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-registry:8761/eureka/
+    networks:
+      - microservices-network
+
+  product-service:
+    build: ./product-service
+    container_name: product-service
+    ports:
+      - "8081:8081"
+    depends_on:
+      - mysql
+      - eureka-registry
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/product_db
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: 1234567
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_JPA_DATABASE_PLATFORM: org.hibernate.dialect.MySQL8Dialect
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-registry:8761/eureka/
+    networks:
+      - microservices-network
+
+  order-management-service:
+    build: ./order-management-service
+    container_name: order-service
+    ports:
+      - "8082:8082"
+    depends_on:
+      - mysql
+      - eureka-registry
+      - product-service
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/order_db
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: 1234567
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_JPA_DATABASE_PLATFORM: org.hibernate.dialect.MySQL8Dialect
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-registry:8761/eureka/
+    networks:
+      - microservices-network
+
+  auth-service:
+    build: ./auth-service
+    container_name: auth-service
+    ports:
+      - "8083:8083"
+    depends_on:
+      - eureka-registry
+    environment:
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-registry:8761/eureka/
+    networks:
+      - microservices-network
+
+  api-gateway:
+    build: ./api-gateway
+    container_name: api-gateway
+    ports:
+      - "8080:8080"
+    depends_on:
+      - eureka-registry
+      - product-service
+      - order-management-service
+      - auth-service
+    environment:
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-registry:8761/eureka/
+    networks:
+      - microservices-network
+
+volumes:
+  mysql-data:
+
+networks:
+  microservices-network:

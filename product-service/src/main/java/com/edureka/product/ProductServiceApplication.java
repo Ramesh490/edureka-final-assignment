@@ -2,8 +2,10 @@ package com.edureka.product;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages="com.edureka.product")
+@EnableDiscoveryClient
 public class ProductServiceApplication {
 
 	public static void main(String[] args) {
