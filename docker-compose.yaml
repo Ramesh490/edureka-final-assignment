@@ -3,8 +3,11 @@ services:
   mysql:
     image: mysql:8
     container_name: mysql
+    restart: always
     environment:
       MYSQL_ROOT_PASSWORD: 1234567
+      MYSQL_ROOT_HOST: "%"
+      MYSQL_DATABASE: product_db
     ports:
       - "3307:3306"
     volumes:
@@ -15,6 +18,7 @@ services:
   eureka-registry:
     build: ./eureka-registry
     container_name: eureka-registry
+    restart: always
     ports:
       - "8761:8761"
     networks:
@@ -23,6 +27,7 @@ services:
   config-server:
     build: ./config-server
     container_name: config-server
+    restart: always
     ports:
       - "8888:8888"
     depends_on:
@@ -35,6 +40,7 @@ services:
   product-service:
     build: ./product-service
     container_name: product-service
+    restart: always
     ports:
       - "8081:8081"
     depends_on:
@@ -44,6 +50,7 @@ services:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/product_db
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: 1234567
+      SPRING_DATASOURCE_DRIVER_CLASS_NAME: com.mysql.cj.jdbc.Driver
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
       SPRING_JPA_DATABASE_PLATFORM: org.hibernate.dialect.MySQL8Dialect
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-registry:8761/eureka/
@@ -53,6 +60,7 @@ services:
   order-management-service:
     build: ./order-management-service
     container_name: order-service
+    restart: always
     ports:
       - "8082:8082"
     depends_on:
@@ -63,6 +71,7 @@ services:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/order_db
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: 1234567
+      SPRING_DATASOURCE_DRIVER_CLASS_NAME: com.mysql.cj.jdbc.Driver
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
       SPRING_JPA_DATABASE_PLATFORM: org.hibernate.dialect.MySQL8Dialect
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-registry:8761/eureka/
@@ -72,6 +81,7 @@ services:
   auth-service:
     build: ./auth-service
     container_name: auth-service
+    restart: always
     ports:
       - "8083:8083"
     depends_on:
@@ -84,6 +94,7 @@ services:
   api-gateway:
     build: ./api-gateway
     container_name: api-gateway
+    restart: always
     ports:
       - "8080:8080"
     depends_on:
