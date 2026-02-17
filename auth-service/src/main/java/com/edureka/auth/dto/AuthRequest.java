@@ -1,8 +1,13 @@
 package com.edureka.auth.dto;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+
 public class AuthRequest {
 
+	@NotBlank
     private String username;
+	@NotEmpty
     private String role;
 
     public AuthRequest() {}

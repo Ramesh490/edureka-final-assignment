@@ -35,6 +35,7 @@ public class ProductController {
 
     @GetMapping
     public List<Product> getProducts() {
+    	logger.info("Inside the getProducts method:");
         return service.getProducts();
     }
     @GetMapping("/{id}")

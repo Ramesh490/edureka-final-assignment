@@ -19,10 +19,18 @@ public class LoggingFilter implements GlobalFilter {
     public Mono<Void> filter(ServerWebExchange exchange,
                              GatewayFilterChain chain) {
 
-        log.info("Incoming request: {} {}",
-                 exchange.getRequest().getMethod(),
-                 exchange.getRequest().getURI());
+        long start = System.currentTimeMillis();
 
-        return chain.filter(exchange);
-    }
+        return chain.filter(exchange)
+                .doFinally(signalType -> {
+
+                    long time = System.currentTimeMillis() - start;
+
+                    log.info("Request: {} {} | Status: {} | Time: {} ms",
+                            exchange.getRequest().getMethod(),
+                            exchange.getRequest().getURI(),
+                            exchange.getResponse().getStatusCode(),
+                            time);
+                });
+}
 }
