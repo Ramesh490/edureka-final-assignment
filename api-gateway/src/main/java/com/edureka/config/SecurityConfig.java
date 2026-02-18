@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.crypto.spec.SecretKeySpec;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -20,9 +21,9 @@ import reactor.core.publisher.Mono;
 
 @Configuration
 public class SecurityConfig {
-
-    private static final String SECRET =
-            "X9kP2vLm8QwRtYz12345JwtSecretKeySecure2026HSPXXxxghtf";
+	
+	@Value("${jwt.secret}")
+    private String SECRET;
 
     @Bean
     public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
@@ -31,9 +32,11 @@ public class SecurityConfig {
             .csrf(ServerHttpSecurity.CsrfSpec::disable)
             .authorizeExchange(exchanges -> exchanges
                 .pathMatchers("/auth/**").permitAll()
-                .pathMatchers(HttpMethod.GET, "/api/products/**").permitAll()
+                
                 .pathMatchers(HttpMethod.POST, "/api/products/newProduct")
                 .hasAuthority("ROLE_PRODUCT_OWNER")
+                
+                .pathMatchers(HttpMethod.GET, "/api/products/**").permitAll()
                 .anyExchange().permitAll()
             )
             .oauth2ResourceServer(oauth2 ->

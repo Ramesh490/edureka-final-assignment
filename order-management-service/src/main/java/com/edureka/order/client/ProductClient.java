@@ -5,8 +5,6 @@ import org.springframework.web.reactive.function.client.WebClient;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import reactor.core.publisher.Mono;
 
-import com.edureka.order.exception.OrderNotPlacedException;
-
 @Component
 public class ProductClient {
 
@@ -31,7 +29,7 @@ public class ProductClient {
                 .block();
     }
 
-    public Boolean fallbackProduct(String category, Throwable ex) {
+    public Boolean fallbackProduct(Throwable ex) {
         System.out.println("Circuit breaker activated: " + ex.getMessage());
         System.out.println("Reason: " + ex.getClass().getSimpleName());
         return false;

@@ -24,7 +24,9 @@ public class ProductService {
 
 	public Product addProduct(Product product) {
         log.info("inside createOrder method {}", product);
-
+        if(isCategoryPresent(product.getCategory())) {
+        	throw new ProductNotFoundException("Product cannot be added bcz category already exists");
+        }
 		return repository.save(product);
 	}
 
