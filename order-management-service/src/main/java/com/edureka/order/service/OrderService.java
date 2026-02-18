@@ -14,6 +14,7 @@ import java.util.List;
 
 @Service
 public class OrderService {
+	private static final String ORDER_NOT_FOUND_WITH_ID = "Order not found with id: ";
 	private static final Logger log =
             LoggerFactory.getLogger(OrderService.class);
     private final OrderRepository repository;
@@ -52,7 +53,7 @@ public class OrderService {
     	log.info("Fetching order with id: {}", id);
         Order order = repository.findById(id)
                 .orElseThrow(() ->
-                        new OrderNotPlacedException("Order not found with id: " + id));
+                        new OrderNotPlacedException(ORDER_NOT_FOUND_WITH_ID + id));
         log.info("Order found: {}", order);
         return order;
     }
@@ -61,7 +62,7 @@ public class OrderService {
     	log.info("Cancelling order with id: {}", id);
         Order order = repository.findById(id)
                 .orElseThrow(() ->
-                        new OrderNotPlacedException("Order not found with id: " + id));
+                        new OrderNotPlacedException(ORDER_NOT_FOUND_WITH_ID + id));
         order.setStatus("CANCELLED");
         repository.save(order);
         log.info("Order {} cancelled successfully", id);
@@ -71,7 +72,7 @@ public class OrderService {
     	log.info("reordering order with id: {}", id);
         Order order = repository.findById(id)
                 .orElseThrow(() ->
-                        new OrderNotPlacedException("Order not found with id: " + id));
+                        new OrderNotPlacedException(ORDER_NOT_FOUND_WITH_ID + id));
         order.setStatus("CREATED");
         repository.save(order);
         log.info("Reordered the order successfully", id);
