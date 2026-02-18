@@ -31,6 +31,7 @@ public class SecurityConfig {
             .csrf(ServerHttpSecurity.CsrfSpec::disable)
             .authorizeExchange(exchanges -> exchanges
                 .pathMatchers("/auth/**").permitAll()
+                .pathMatchers(HttpMethod.GET, "/api/products/**").permitAll()
                 .pathMatchers(HttpMethod.POST, "/api/products/newProduct")
                 .hasAuthority("ROLE_PRODUCT_OWNER")
                 .anyExchange().permitAll()
