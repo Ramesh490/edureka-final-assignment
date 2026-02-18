@@ -57,7 +57,13 @@ public class OrderService {
         log.info("Order found: {}", order);
         return order;
     }
-
+    public String deleteProduct(Long id) {
+		if (!repository.existsById(id)) {
+			throw new OrderNotPlacedException("No products with ID");
+		}
+		repository.deleteById(id);
+		return "Product with: "+id+":deleted";
+	}
     public String cancelOrder(Long id) {
     	log.info("Cancelling order with id: {}", id);
         Order order = repository.findById(id)

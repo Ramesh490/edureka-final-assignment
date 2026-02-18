@@ -36,6 +36,11 @@ public class OrderController {
         System.out.println("Controller reached with id: " + id);
         return service.getById(id);
     }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteProduct(@PathVariable("id") Long id) {
+        String message=service.deleteProduct(id);
+        return ResponseEntity.ok(message);
+    }
     @PutMapping("/cancel/id/{id}")
     public ResponseEntity<String> cancelOrder(@PathVariable("id") Long id) {
         String message = service.cancelOrder(id);
