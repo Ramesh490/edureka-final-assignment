@@ -33,10 +33,8 @@ public class SecurityConfig {
             .authorizeExchange(exchanges -> exchanges
                 .pathMatchers("/auth/**").permitAll()
                 
-                .pathMatchers(HttpMethod.POST, "/api/products/newProduct")
+                .pathMatchers(HttpMethod.POST, "/api/products")
                 .hasAuthority("ROLE_PRODUCT_OWNER")
-                
-                .pathMatchers(HttpMethod.GET, "/api/products/**").permitAll()
                 .anyExchange().permitAll()
             )
             .oauth2ResourceServer(oauth2 ->

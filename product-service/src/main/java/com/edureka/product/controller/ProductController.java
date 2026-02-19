@@ -25,7 +25,7 @@ public class ProductController {
         this.service = service;
     }
 
-    @PostMapping("/newProduct")
+    @PostMapping
     public ResponseEntity<ProductResponse> addProduct(@RequestBody Product product) {
     	logger.info("The product is received");
          Product newProduct=service.addProduct(product);
